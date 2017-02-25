@@ -1,6 +1,6 @@
 {
   "name": "service-loader",
-  "version": "0.1.0alpha",
+  "version": "0.1.0",
   "description": "A service provider loader",
   "homepage": "https://github.com/Skelp/node-service-loader",
   "bugs": {

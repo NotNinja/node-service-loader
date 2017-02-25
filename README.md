@@ -45,7 +45,7 @@ The current version of ServiceLoader.
 const ServiceLoader = require('service-loader')
 
 ServiceLoader.version
-=> "0.1.0alpha"
+=> "0.1.0"
 ```
 
 ## Bugs
