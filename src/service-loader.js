@@ -28,6 +28,8 @@ const pacscan = require('pacscan')
 const path = require('path')
 const whoIsThere = require('knockknock')
 
+const version = require('../package.json').version
+
 /**
  * The regular expression used to check whether the string representation of a function indicates that it is in fact an
  * ECMAScript class.
@@ -68,6 +70,17 @@ class ServiceLoader {
    */
   static load(service, options) {
     return new ServiceLoader(service, options)
+  }
+
+  /**
+   * The current version of ServiceLoader.
+   *
+   * @public
+   * @static
+   * @type {string}
+   */
+  static get version() {
+    return version
   }
 
   /**

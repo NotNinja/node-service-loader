@@ -22,4 +22,17 @@
 
 'use strict'
 
-// TODO: Complete
+const expect = require('chai').expect
+
+const ServiceLoader = require('../src/service-loader')
+const version = require('../package.json').version
+
+describe('ServiceLoader', () => {
+  // TODO: Complete
+
+  describe('.version', () => {
+    it('should match  package version', () => {
+      expect(ServiceLoader.version).to.equal(version)
+    })
+  })
+})
