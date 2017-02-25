@@ -1,0 +1,19 @@
+{
+  "extends": "skelp/v3/es6",
+  "env": {
+    "node": true
+  },
+  "rules": {
+    "global-require": "off",
+    "max-params": [
+      "error",
+      4
+    ],
+    "no-use-before-define": [
+      "error",
+      {
+        "functions": false
+      }
+    ]
+  }
+}

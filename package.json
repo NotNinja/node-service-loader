@@ -1,0 +1,49 @@
+{
+  "name": "service-loader",
+  "version": "0.1.0alpha",
+  "description": "A service provider loader",
+  "homepage": "https://github.com/Skelp/node-service-loader",
+  "bugs": {
+    "url": "https://github.com/Skelp/node-service-loader/issues"
+  },
+  "author": {
+    "name": "Alasdair Mercer",
+    "email": "alasdair@skelp.io",
+    "url": "https://skelp.io"
+  },
+  "license": "MIT",
+  "keywords": [
+    "service",
+    "provider",
+    "loader",
+    "spi"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Skelp/node-service-loader.git"
+  },
+  "dependencies": {
+    "debug": "^2.6.1",
+    "knockknock": "^0.2.0",
+    "lodash.forown": "^4.4.0",
+    "pacscan": "^0.1.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "coveralls": "^2.11.16",
+    "eslint": "^3.15.0",
+    "eslint-config-skelp": "^0.1.5",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.2.0"
+  },
+  "main": "src/service-loader.js",
+  "scripts": {
+    "report-coverage": "istanbul cover _mocha --report lcovonly -- -R spec \"test/**/*.spec.js\" && coveralls < coverage/lcov.info",
+    "pretest": "eslint \"src/**/*.js\" \"test/**/*.js\"",
+    "test": "istanbul cover _mocha -- -R spec \"test/**/*.spec.js\"",
+    "posttest": "istanbul check-coverage"
+  },
+  "engines": {
+    "node": ">=4"
+  }
+}
