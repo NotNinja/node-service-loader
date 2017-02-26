@@ -1,11 +1,17 @@
-     .d8888b.                            d8b                  888                            888
-    d88P  Y88b                           Y8P                  888                            888
-    Y88b.                                                     888                            888
-     "Y888b.    .d88b.  888d888 888  888 888  .d8888b .d88b.  888      .d88b.   8888b.   .d88888  .d88b.  888d888
-        "Y88b. d8P  Y8b 888P"   888  888 888 d88P"   d8P  Y8b 888     d88""88b     "88b d88" 888 d8P  Y8b 888P"
-          "888 88888888 888     Y88  88P 888 888     88888888 888     888  888 .d888888 888  888 88888888 888
-    Y88b  d88P Y8b.     888      Y8bd8P  888 Y88b.   Y8b.     888     Y88..88P 888  888 Y88b 888 Y8b.     888
-     "Y8888P"   "Y8888  888       Y88P   888  "Y8888P "Y8888  88888888 "Y88P"  "Y888888  "Y88888  "Y8888  888
+                                       d8b
+                                       Y8P
+    
+    .d8888b   .d88b.  888d888 888  888 888  .d8888b .d88b.
+    88K      d8P  Y8b 888P"   888  888 888 d88P"   d8P  Y8b
+    "Y8888b. 88888888 888     Y88  88P 888 888     88888888
+         X88 Y8b.     888      Y8bd8P  888 Y88b.   Y8b.           888
+     88888P'  "Y8888  888       Y88P   888  "Y8888P "Y8888        888
+                                       888                        888
+                                       888  .d88b.   8888b.   .d88888  .d88b.  888d888
+                                       888 d88""88b     "88b d88" 888 d8P  Y8b 888P"
+                                       888 888  888 .d888888 888  888 88888888 888
+                                       888 Y88..88P 888  888 Y88b 888 Y8b.     888
+                                       888  "Y88P"  "Y888888  "Y88888  "Y8888  888
 
 [ServiceLoader](https://github.com/Skelp/node-service-loader) is a service provider loader.
 
@@ -32,9 +38,9 @@ You'll need to have at least [Node.js](https://nodejs.org) 4 or newer.
 
 ## API
 
-### `load(service[, packageName])`
+### `load(service[, options])`
 
-TODO: Document
+TODO: Document  
 TODO: Example(s)
 
 ### `version`
