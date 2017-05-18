@@ -24,15 +24,27 @@
 
 const expect = require('chai').expect;
 
-const ServiceLoader = require('../src/service-loader');
-const version = require('../package.json').version;
+const helpers = require('./helpers');
 
-describe('ServiceLoader', () => {
-  // TODO: Complete
+describe('service-loader:fixture:unpackaged-single', () => {
+  before(() => helpers.copyFixture('unpackaged-single'));
 
-  describe('.version', () => {
-    it('should match  package version', () => {
-      expect(ServiceLoader.version).to.equal(version);
+  context('when called with package name', () => {
+    it('should be empty', () => {
+      const unpackagedSingle = helpers.requireFromFixture('unpackaged-single', 'index.js');
+      const providers = Array.from(unpackagedSingle('foo', 'bar'));
+
+      expect(providers).to.be.empty;
+    });
+  });
+
+  context('when called without package name', () => {
+    it('should throw an error', () => {
+      const unpackagedSingle = helpers.requireFromFixture('unpackaged-single', 'index.js');
+
+      expect(() => {
+        unpackagedSingle('foo');
+      }).to.throw(Error, /packageName must be specified as cannot resolve calling package/);
     });
   });
 });

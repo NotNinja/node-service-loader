@@ -1,15 +1,15 @@
 {
   "name": "service-loader",
-  "version": "0.1.0alpha",
+  "version": "0.1.0",
   "description": "A service provider loader",
-  "homepage": "https://github.com/Skelp/node-service-loader",
+  "homepage": "https://github.com/NotNinja/node-service-loader",
   "bugs": {
-    "url": "https://github.com/Skelp/node-service-loader/issues"
+    "url": "https://github.com/NotNinja/node-service-loader/issues"
   },
   "author": {
     "name": "Alasdair Mercer",
-    "email": "alasdair@skelp.io",
-    "url": "https://skelp.io"
+    "email": "mercer.alasdair@gmail.com",
+    "url": "https://not.ninja"
   },
   "license": "MIT",
   "keywords": [
@@ -20,27 +20,31 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Skelp/node-service-loader.git"
+    "url": "https://github.com/NotNinja/node-service-loader.git"
   },
   "dependencies": {
-    "debug": "^2.6.1",
-    "knockknock": "^0.2.0",
+    "debug": "*",
+    "knockknock": "^0.3.0",
     "lodash.forown": "^4.4.0",
-    "pacscan": "^0.1.0"
+    "pacscan": "^0.2.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "coveralls": "^2.11.16",
-    "eslint": "^3.15.0",
-    "eslint-config-skelp": "^0.1.5",
+    "codecov": "^2.2.0",
+    "eslint": "^3.19.0",
+    "eslint-config-notninja": "^0.1.1",
     "istanbul": "^0.4.5",
-    "mocha": "^3.2.0"
+    "mkdirp": "^0.5.1",
+    "mocha": "^3.4.1",
+    "ncp": "^2.0.0",
+    "tmp": "0.0.31"
   },
   "main": "src/service-loader.js",
   "scripts": {
-    "report-coverage": "istanbul cover _mocha --report lcovonly -- -R spec \"test/**/*.spec.js\" && coveralls < coverage/lcov.info",
+    "ci": "npm run test",
+    "report-coverage": "istanbul cover _mocha --report lcovonly -- -R list \"test/**/*.spec.js\" && codecov",
     "pretest": "eslint \"src/**/*.js\" \"test/**/*.js\"",
-    "test": "istanbul cover _mocha -- -R spec \"test/**/*.spec.js\"",
+    "test": "istanbul cover _mocha -- -R list \"test/**/*.spec.js\"",
     "posttest": "istanbul check-coverage"
   },
   "engines": {
