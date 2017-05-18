@@ -4,6 +4,10 @@
     "node": true
   },
   "rules": {
+    "func-names": [
+      "error",
+      "always"
+    ],
     "global-require": "off",
     "max-params": [
       "error",

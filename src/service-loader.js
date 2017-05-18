@@ -49,27 +49,27 @@ const rClass = /^class\s+/
 class ServiceLoader {
 
   /**
-   * Creates an instance of {@link ServiceLoader} for the specified <code>service</code> using the <code>options</code>
-   * provided.
+   * Creates an instance of {@link ServiceLoader} for the service with the specified name belonging to the named package
+   * and using the <code>options</code> provided.
    *
-   * If <code>service</code> is a function, then the name of that function will be used to lookup service providers. If
-   * no <code>packageName</code> option is specified, then the name of the package that called this method will be used
-   * instead.
+   * If <code>packageName</code> is not specified or is <code>null</code>, then the name of the package that called this
+   * method will be used instead.
    *
    * Consumers can control what modules/packages are considered during the search for the calling package via the
    * <code>knockknock</code> option, however, the <code>limit</code> will always be overridden to <code>1</code>.
    *
-   * @param {string|Function} service - the name of the service (or the service function, only if not anonymous) whose
-   * providers are to be loaded
+   * @param {string} serviceName - the name of the service whose providers are to be loaded
+   * @param {string} [packageName] - the name of the package for which the services are loaded (may be
+   * <code>null</code>)
    * @param {ServiceLoader~Options} [options] - the options to be used (may be <code>null</code>)
-   * @return {ServiceLoader} The {@link ServiceLoader} to be used to load providers for <code>service</code>.
-   * @throws {Error} If <code>service</code> is not provided or the package name could not be resolved from the caller
-   * and the <code>packageName</code> option was not specified.
+   * @return {ServiceLoader} The {@link ServiceLoader} to be used to load providers for the named service.
+   * @throws {Error} If <code>service</code> is not provided or if <code>packageName</code> is not provided and the
+   * package name could not be resolved from the caller.
    * @public
    * @static
    */
-  static load(service, options) {
-    return new ServiceLoader(service, options)
+  static load(serviceName, packageName, options) {
+    return new ServiceLoader(serviceName, packageName, options)
   }
 
   /**
@@ -130,56 +130,54 @@ class ServiceLoader {
       options = {}
     }
 
-    let packageName = options.packageName
+    return { knockknock: options.knockknock }
+  }
+
+  /**
+   * Creates an instance of {@link ServiceLoader} for the service with the specified name belonging to the named package
+   * and using the <code>options</code> provided.
+   *
+   * If <code>packageName</code> is not specified or is <code>null</code>, then the name of the package that called this
+   * constructor will be used instead.
+   *
+   * Consumers can control what modules/packages are considered during the search for the calling package via the
+   * <code>knockknock</code> option, however, the <code>limit</code> will always be overridden to <code>1</code>.
+   *
+   * @param {string} serviceName - the name of the service whose providers are to be loaded
+   * @param {string} [packageName] - the name of the package for which the services are loaded (may be
+   * <code>null</code>)
+   * @param {ServiceLoader~Options} [options] - the options to be used (may be <code>null</code>)
+   * @throws {Error} If <code>service</code> is not provided or if <code>packageName</code> is not provided and the
+   * package name could not be resolved from the caller.
+   * @public
+   */
+  constructor(serviceName, packageName, options) {
+    if (!options && typeof packageName === 'object') {
+      options = packageName
+      packageName = null
+    }
+
+    options = ServiceLoader._parseOptions(options)
+
     if (!packageName) {
       const caller = ServiceLoader._findCaller(options.knockknock)
       packageName = caller != null && caller.pkg != null ? caller.pkg.name : null
     }
 
-    return {
-      knockknock: options.knockknock,
-      packageName
-    }
-  }
-
-  /**
-   * Creates an instance of {@link ServiceLoader} for the specified <code>service</code> using the <code>options</code>
-   * provided.
-   *
-   * If <code>service</code> is a function, then the name of that function will be used to lookup service providers. If
-   * no <code>packageName</code> option is specified, then the name of the package that called this constructor will be
-   * used instead.
-   *
-   * Consumers can control what modules/packages are considered during the search for the calling package via the
-   * <code>knockknock</code> option, however, the <code>limit</code> will always be overridden to <code>1</code>.
-   *
-   * @param {string|Function} service - the name of the service (or the service function, only if not anonymous) whose
-   * providers are to be loaded
-   * @param {ServiceLoader~Options} [options] - the options to be used (may be <code>null</code>)
-   * @throws {Error} If <code>service</code> is not provided or the package name could not be resolved from the caller
-   * and the <code>packageName</code> option was not specified.
-   * @public
-   */
-  constructor(service, options) {
-    options = ServiceLoader._parseOptions(options)
-
-    const serviceName = typeof service === 'function' ? service.name : service
-    const packageName = options.packageName
-
     if (!serviceName) {
-      throw new Error('service must be provided')
+      throw new Error('serviceName must be specified')
     }
     if (!packageName) {
-      throw new Error('packageName option must be provided as cannot resolve calling package')
+      throw new Error('packageName must be specified as cannot resolve calling package')
     }
 
     /**
-     * The parsed options for this {@link ServiceLoader}.
+     * The name of the service whose providers are to be loaded by this {@link ServiceLoader}.
      *
      * @private
-     * @type {ServiceLoader~Options}
+     * @type {string}
      */
-    this._options = options
+    this._serviceName = serviceName
 
     /**
      * The name of the package whose named service the providers are to be loaded by this {@link ServiceLoader}.
@@ -188,6 +186,14 @@ class ServiceLoader {
      * @type {string}
      */
     this._packageName = packageName
+
+    /**
+     * The parsed options for this {@link ServiceLoader}.
+     *
+     * @private
+     * @type {ServiceLoader~Options}
+     */
+    this._options = options
 
     /**
      * The file paths of loaded providers mapped to their corresponding loaded provider.
@@ -203,14 +209,6 @@ class ServiceLoader {
      */
     this._providers = null
 
-    /**
-     * The name of the service whose providers are to be loaded by this {@link ServiceLoader}.
-     *
-     * @private
-     * @type {string}
-     */
-    this._serviceName = serviceName
-
     debug('Loaded ServiceLoader for "%s" service in "%s" package', serviceName, packageName)
   }
 
@@ -221,6 +219,7 @@ class ServiceLoader {
     if (!this._providers) {
       const packages = pacscan.sync({
         includeParents: true,
+        knockknock: this._options.knockknock,
         path: __filename
       })
       const providers = new Map()
@@ -337,7 +336,6 @@ module.exports = ServiceLoader
  * @typedef {Object} ServiceLoader~Options
  * @property {knockknock~Options} [knockknock] - The options to be passed to <code>knockknock</code> when attempting to
  * determine the calling module (<code>limit</code> will always be overridden to <code>1</code>).
- * @property {string} [packageName] - The name of the package for which the services are loaded.
  */
 
 /**

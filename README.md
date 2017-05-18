@@ -38,7 +38,7 @@ You'll need to have at least [Node.js](https://nodejs.org) 4 or newer.
 
 ## API
 
-### `load(service[, options])`
+### `load(serviceName[, packageName][, options])`
 
 TODO: Document  
 TODO: Example(s)

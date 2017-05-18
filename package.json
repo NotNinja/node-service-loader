@@ -34,7 +34,10 @@
     "eslint": "^3.15.0",
     "eslint-config-skelp": "^0.1.5",
     "istanbul": "^0.4.5",
-    "mocha": "^3.2.0"
+    "mkdirp": "^0.5.1",
+    "mocha": "^3.2.0",
+    "ncp": "^2.0.0",
+    "tmp": "0.0.31"
   },
   "main": "src/service-loader.js",
   "scripts": {
