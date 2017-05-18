@@ -1,5 +1,5 @@
 {
-  "extends": "skelp/v3/es6",
+  "extends": "notninja/es6",
   "env": {
     "node": true
   },

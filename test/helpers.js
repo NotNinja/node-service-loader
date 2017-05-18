@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Alasdair Mercer, Skelp
+ * Copyright (C) 2017 Alasdair Mercer, !ninja
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,12 @@
  * SOFTWARE.
  */
 
-'use strict'
+'use strict';
 
-const mkdirp = require('mkdirp')
-const ncp = require('ncp').ncp
-const path = require('path')
-const tmp = require('tmp')
+const mkdirp = require('mkdirp');
+const ncp = require('ncp').ncp;
+const path = require('path');
+const tmp = require('tmp');
 
 /**
  * The path to the temporary directory created from where fixtures should be run in isolation.
@@ -36,7 +36,7 @@ const tmp = require('tmp')
  * @private
  * @type {?string}
  */
-let tempDirPath
+let tempDirPath;
 
 /**
  * Copies the contents of the fixture directory with the specified <code>name</code> to a temporary directory so that it
@@ -50,19 +50,19 @@ let tempDirPath
  */
 exports.copyFixture = function copyFixture(name) {
   return new Promise((resolve, reject) => {
-    const dirPath = exports.getFixtureDirectory(name)
+    const dirPath = exports.getFixtureDirectory(name);
 
-    mkdirp.sync(dirPath)
+    mkdirp.sync(dirPath);
 
     ncp(path.join(__dirname, 'fixtures', name), dirPath, (error) => {
       if (error) {
-        reject(error)
+        reject(error);
       } else {
-        resolve(dirPath)
+        resolve(dirPath);
       }
-    })
-  })
-}
+    });
+  });
+};
 
 /**
  * Creates options to be used by tests.
@@ -77,16 +77,16 @@ exports.copyFixture = function copyFixture(name) {
  */
 exports.createOptions = function createOptions(options) {
   if (!options) {
-    options = {}
+    options = {};
   }
 
-  const knockknock = Object.assign({}, options.knockknock)
-  knockknock.excludes = [ 'chai', 'mocha' ].concat(knockknock.excludes || [])
+  const knockknock = Object.assign({}, options.knockknock);
+  knockknock.excludes = [ 'chai', 'mocha' ].concat(knockknock.excludes || []);
 
-  options.knockknock = knockknock
+  options.knockknock = knockknock;
 
-  return options
-}
+  return options;
+};
 
 /**
  * Returns the path to the temporary directory containing the contents of the fixture directory with the specified
@@ -98,8 +98,8 @@ exports.createOptions = function createOptions(options) {
  * @static
  */
 exports.getFixtureDirectory = function getFixtureDirectory(name) {
-  return path.join(exports.getTempDirectory(), 'fixtures', name)
-}
+  return path.join(exports.getTempDirectory(), 'fixtures', name);
+};
 
 /**
  * Returns the path of the temporary directory created from where fixtures should be run in isolation.
@@ -110,13 +110,13 @@ exports.getFixtureDirectory = function getFixtureDirectory(name) {
  */
 exports.getTempDirectory = function getTempDirectory() {
   if (tempDirPath == null) {
-    tmp.setGracefulCleanup()
+    tmp.setGracefulCleanup();
 
-    tempDirPath = tmp.dirSync().name
+    tempDirPath = tmp.dirSync().name;
   }
 
-  return tempDirPath
-}
+  return tempDirPath;
+};
 
 /**
  * Requires the file at the given path within the directory for the fixture with the specified <code>name</code>.
@@ -133,18 +133,18 @@ exports.getTempDirectory = function getTempDirectory() {
  * @static
  */
 exports.requireFromFixture = function requireFromFixture(name, filePath) {
-  const fixture = require(exports.resolveFixtureFile(name, filePath))
-  const serviceLoaderPath = path.resolve(__dirname, '../src/service-loader')
+  const fixture = require(exports.resolveFixtureFile(name, filePath));
+  const serviceLoaderPath = path.resolve(__dirname, '../src/service-loader');
 
   return function proxy(serviceName, packageName, options) {
     if (!options && typeof packageName === 'object') {
-      options = packageName
-      packageName = null
+      options = packageName;
+      packageName = null;
     }
 
-    return fixture(serviceLoaderPath, serviceName, packageName, exports.createOptions(options))
-  }
-}
+    return fixture(serviceLoaderPath, serviceName, packageName, exports.createOptions(options));
+  };
+};
 
 /**
  * Resolves the specified <code>filePath</code> to the temporary directory for the fixture with the specified
@@ -157,5 +157,5 @@ exports.requireFromFixture = function requireFromFixture(name, filePath) {
  * @static
  */
 exports.resolveFixtureFile = function resolveFixtureFile(name, filePath) {
-  return path.resolve(exports.getFixtureDirectory(name), filePath)
-}
+  return path.resolve(exports.getFixtureDirectory(name), filePath);
+};

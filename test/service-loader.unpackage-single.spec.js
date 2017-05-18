@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Alasdair Mercer, Skelp
+ * Copyright (C) 2017 Alasdair Mercer, !ninja
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,31 +20,31 @@
  * SOFTWARE.
  */
 
-'use strict'
+'use strict';
 
-const expect = require('chai').expect
+const expect = require('chai').expect;
 
-const helpers = require('./helpers')
+const helpers = require('./helpers');
 
 describe('service-loader:fixture:unpackaged-single', () => {
-  before(() => helpers.copyFixture('unpackaged-single'))
+  before(() => helpers.copyFixture('unpackaged-single'));
 
   context('when called with package name', () => {
     it('should be empty', () => {
-      const unpackagedSingle = helpers.requireFromFixture('unpackaged-single', 'index.js')
-      const providers = Array.from(unpackagedSingle('foo', 'bar'))
+      const unpackagedSingle = helpers.requireFromFixture('unpackaged-single', 'index.js');
+      const providers = Array.from(unpackagedSingle('foo', 'bar'));
 
-      expect(providers).to.be.empty
-    })
-  })
+      expect(providers).to.be.empty;
+    });
+  });
 
   context('when called without package name', () => {
     it('should throw an error', () => {
-      const unpackagedSingle = helpers.requireFromFixture('unpackaged-single', 'index.js')
+      const unpackagedSingle = helpers.requireFromFixture('unpackaged-single', 'index.js');
 
       expect(() => {
-        unpackagedSingle('foo')
-      }).to.throw(Error, /packageName must be specified as cannot resolve calling package/)
-    })
-  })
-})
+        unpackagedSingle('foo');
+      }).to.throw(Error, /packageName must be specified as cannot resolve calling package/);
+    });
+  });
+});

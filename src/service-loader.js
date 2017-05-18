@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Alasdair Mercer, Skelp
+ * Copyright (C) 2017 Alasdair Mercer, !ninja
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,15 +20,15 @@
  * SOFTWARE.
  */
 
-'use strict'
+'use strict';
 
-const debug = require('debug')('service-loader')
-const forOwn = require('lodash.forown')
-const pacscan = require('pacscan')
-const path = require('path')
-const whoIsThere = require('knockknock')
+const debug = require('debug')('service-loader');
+const forOwn = require('lodash.forown');
+const pacscan = require('pacscan');
+const path = require('path');
+const whoIsThere = require('knockknock');
 
-const version = require('../package.json').version
+const version = require('../package.json').version;
 
 /**
  * The regular expression used to check whether the string representation of a function indicates that it is in fact an
@@ -37,7 +37,7 @@ const version = require('../package.json').version
  * @private
  * @type {RegExp}
  */
-const rClass = /^class\s+/
+const rClass = /^class\s+/;
 
 /**
  * TODO: Document
@@ -69,7 +69,7 @@ class ServiceLoader {
    * @static
    */
   static load(serviceName, packageName, options) {
-    return new ServiceLoader(serviceName, packageName, options)
+    return new ServiceLoader(serviceName, packageName, options);
   }
 
   /**
@@ -80,7 +80,7 @@ class ServiceLoader {
    * @type {string}
    */
   static get version() {
-    return version
+    return version;
   }
 
   /**
@@ -94,13 +94,13 @@ class ServiceLoader {
    * @static
    */
   static _findCaller(options) {
-    options = Object.assign({}, options, { limit: 1 })
+    options = Object.assign({}, options, { limit: 1 });
 
-    const excludes = [ 'service-loader' ]
+    const excludes = [ 'service-loader' ];
 
-    options.excludes = options.excludes ? excludes.concat(options.excludes) : excludes
+    options.excludes = options.excludes ? excludes.concat(options.excludes) : excludes;
 
-    return whoIsThere.sync(options)[0]
+    return whoIsThere.sync(options)[0];
   }
 
   /**
@@ -112,7 +112,7 @@ class ServiceLoader {
    * @static
    */
   static _isClass(obj) {
-    return typeof obj === 'function' && rClass.test(obj.toString())
+    return typeof obj === 'function' && rClass.test(obj.toString());
   }
 
   /**
@@ -127,10 +127,10 @@ class ServiceLoader {
    */
   static _parseOptions(options) {
     if (!options) {
-      options = {}
+      options = {};
     }
 
-    return { knockknock: options.knockknock }
+    return { knockknock: options.knockknock };
   }
 
   /**
@@ -153,22 +153,22 @@ class ServiceLoader {
    */
   constructor(serviceName, packageName, options) {
     if (!options && typeof packageName === 'object') {
-      options = packageName
-      packageName = null
+      options = packageName;
+      packageName = null;
     }
 
-    options = ServiceLoader._parseOptions(options)
+    options = ServiceLoader._parseOptions(options);
 
     if (!packageName) {
-      const caller = ServiceLoader._findCaller(options.knockknock)
-      packageName = caller != null && caller.pkg != null ? caller.pkg.name : null
+      const caller = ServiceLoader._findCaller(options.knockknock);
+      packageName = caller != null && caller.pkg != null ? caller.pkg.name : null;
     }
 
     if (!serviceName) {
-      throw new Error('serviceName must be specified')
+      throw new Error('serviceName must be specified');
     }
     if (!packageName) {
-      throw new Error('packageName must be specified as cannot resolve calling package')
+      throw new Error('packageName must be specified as cannot resolve calling package');
     }
 
     /**
@@ -177,7 +177,7 @@ class ServiceLoader {
      * @private
      * @type {string}
      */
-    this._serviceName = serviceName
+    this._serviceName = serviceName;
 
     /**
      * The name of the package whose named service the providers are to be loaded by this {@link ServiceLoader}.
@@ -185,7 +185,7 @@ class ServiceLoader {
      * @private
      * @type {string}
      */
-    this._packageName = packageName
+    this._packageName = packageName;
 
     /**
      * The parsed options for this {@link ServiceLoader}.
@@ -193,7 +193,7 @@ class ServiceLoader {
      * @private
      * @type {ServiceLoader~Options}
      */
-    this._options = options
+    this._options = options;
 
     /**
      * The file paths of loaded providers mapped to their corresponding loaded provider.
@@ -207,9 +207,9 @@ class ServiceLoader {
      * @private
      * @type {?Map.<string, *>}
      */
-    this._providers = null
+    this._providers = null;
 
-    debug('Loaded ServiceLoader for "%s" service in "%s" package', serviceName, packageName)
+    debug('Loaded ServiceLoader for "%s" service in "%s" package', serviceName, packageName);
   }
 
   /**
@@ -221,15 +221,15 @@ class ServiceLoader {
         includeParents: true,
         knockknock: this._options.knockknock,
         path: __filename
-      })
-      const providers = new Map()
+      });
+      const providers = new Map();
 
-      packages.forEach((pkg) => this._loadPackage(pkg, providers))
+      packages.forEach((pkg) => this._loadPackage(pkg, providers));
 
-      this._providers = providers
+      this._providers = providers;
     }
 
-    yield* this._providers.values()
+    yield* this._providers.values();
   }
 
   /**
@@ -239,14 +239,14 @@ class ServiceLoader {
    * @public
    */
   reload() {
-    this._providers = null
+    this._providers = null;
   }
 
   /**
    * @override
    */
   toString() {
-    return `ServiceLoader[${this._serviceName}]`
+    return `ServiceLoader[${this._serviceName}]`;
   }
 
   /**
@@ -262,15 +262,15 @@ class ServiceLoader {
    * @private
    */
   _loadPackage(pkg, providers) {
-    debug('Attempting to load package "%s"', pkg.name)
+    debug('Attempting to load package "%s"', pkg.name);
 
-    const packageJson = require(path.join(pkg.directory, 'package.json'))
+    const packageJson = require(path.join(pkg.directory, 'package.json'));
 
     forOwn(packageJson.services, (services, servicePackageName) => {
       if (servicePackageName === this._packageName) {
-        this._loadServiceProviders(pkg, services, providers)
+        this._loadServiceProviders(pkg, services, providers);
       }
-    })
+    });
   }
 
   /**
@@ -285,15 +285,15 @@ class ServiceLoader {
    * @private
    */
   _loadProvider(filePath) {
-    debug('Loading "%s" provider for "%s" service in "%s" package', filePath, this._serviceName, this._packageName)
+    debug('Loading "%s" provider for "%s" service in "%s" package', filePath, this._serviceName, this._packageName);
 
-    const provider = require(filePath)
+    const provider = require(filePath);
     if (ServiceLoader._isClass(provider)) {
-      const ProviderConstructor = provider
-      return new ProviderConstructor()
+      const ProviderConstructor = provider;
+      return new ProviderConstructor();
     }
 
-    return provider
+    return provider;
   }
 
   /**
@@ -314,21 +314,21 @@ class ServiceLoader {
    */
   _loadServiceProviders(pkg, services, providers) {
     forOwn(services, (service, serviceName) => {
-      service = typeof service === 'string' ? { path: service } : service
+      service = typeof service === 'string' ? { path: service } : service;
 
       if (serviceName === this._serviceName && service && service.path) {
-        const providerPath = path.resolve(pkg.directory, service.path)
+        const providerPath = path.resolve(pkg.directory, service.path);
 
         if (!providers.has(providerPath)) {
-          providers.set(providerPath, this._loadProvider(providerPath))
+          providers.set(providerPath, this._loadProvider(providerPath));
         }
       }
-    })
+    });
   }
 
 }
 
-module.exports = ServiceLoader
+module.exports = ServiceLoader;
 
 /**
  * The options to be used to load service providers.
